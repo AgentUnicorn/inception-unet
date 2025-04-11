@@ -67,7 +67,8 @@ def read(path, file_count):
     
         
     Xtrain =Xtrain.astype(np.float32) 
-    Ytrain =Ytrain.astype(np.uint8) 
+    # Ytrain =Ytrain.astype(np.uint8) 
+    Ytrain =Ytrain.astype(np.float32) 
     
     if band_first:
         x_train = Xtrain.reshape((len(Xtrain), 3, window, window))

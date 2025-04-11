@@ -42,7 +42,7 @@ def dice_coef_loss(y_true, y_pred):
 smooth = 1.
 
 
-MASSACHUSETTS_PATH = "Massachusetts/"
+MASSACHUSETTS_PATH = "datasets/Massachusetts/"
 TRAINING_SET = 1
 MODEL_NAME = 'UNETV2' # or 'UNET' or 'INCEPTION'
 
@@ -77,7 +77,7 @@ model.compile(optimizer=Adam(learning_rate=1e-5), loss=dice_coef_loss, metrics=[
 
 
 model_name = MODEL_NAME
-save_weights_path = "results-1/" + model_name
+save_weights_path = "results/" + model_name
 
 
 orig_stdout = sys.stdout
@@ -104,7 +104,6 @@ history = model.fit([x_train], [y_train],
                                callbacks=callbacks_list,
                                batch_size=5,
                                epochs=epoch)
-
 
 
 strTemp = save_weights_path + model_name + ".history"

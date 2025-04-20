@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import torch
-from unetV2 import UNetPlusInception  # Your PyTorch model file
+from unetV2_pytorch import UNetPlusInception  # Your PyTorch model file
 
 
 def load_and_preprocess_image(image_path, target_size=(224, 224), device="cpu"):
@@ -37,6 +37,6 @@ def predict_segmentation(model_path, image_path, output_path="predicted_mask.png
 
 
 if __name__ == "__main__":
-    model_path = "/content/inception-unet/results-1/UNETV2_weights.pth"
+    model_path = "/content/modelRunner/results/UNETV2_weights.pth"
     image_path = "/content/drive/MyDrive/Massachusetts/test/22828930_15.tiff"
     predict_segmentation(model_path, image_path)

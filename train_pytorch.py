@@ -128,7 +128,7 @@ def main():
 
     # Load data
     train_path = MASSACHUSETTS_PATH + "train/"
-    x_train, y_train = read_data.read(train_path, 110)
+    x_train, y_train = read_data.read(train_path, 130)
 
     if TRAINING_SET == 2:
         index = 75 * 49
@@ -171,6 +171,7 @@ def main():
         save_path=save_weights_path,
     )
 
+    os.makedirs(os.path.dirname(history_path), exist_ok=True)
     save_history(history, history_path)
     print(f"Training history saved to {history_path}")
 

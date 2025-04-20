@@ -10,7 +10,7 @@ from torch.nn import functional as F
 from tqdm import tqdm
 
 import read_data  # your data reading module
-from unetV2 import UNetPlusInception  # your PyTorch model file
+from unetV2_pytorch import UNetPlusInception  # your PyTorch model file
 
 # Dice coefficient and loss (same as before)
 smooth = 1.0

@@ -29,7 +29,7 @@ def read(path, file_count):
         
         gt_filename = os.path.splitext(filename)[0]
         gt_path = os.path.join(path, "gt", gt_filename + ".tif")
-        gt = cv.imread(gt_path, cv2.IMREAD_GRAYSCALE)
+        gt = cv2.imread(gt_path, cv2.IMREAD_GRAYSCALE)
         if gt is None:
             raise Exception(f"Ground truth file not found: {gt_path}")
 

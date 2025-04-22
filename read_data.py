@@ -13,28 +13,29 @@ def read(path, file_count):
     window = 28 * 8
     
     filename_list = os.listdir(path)
+    filename_list = [f for f in filename_list if f.endswith(".tiff")]
     filename_list = filename_list[:file_count]
     
     data_size = file_count * 49
     
-    band_first = False
-    Xtrain = np.zeros((data_size, window, window, 3))
-    Ytrain = np.zeros((data_size, window, window))
-    
+    Xtrain = np.zeros((data_size, window, window, 3), dtype=np.float32)
+    Ytrain = np.zeros((data_size, window, window), dtype=np.float32)
     
     index=0
     for filename in filename_list:
-    
-        if not ".tiff" in filename:
-            continue
         
-        image1 = skimage.io.imread(path + filename,plugin='tifffile') / 255
+        image_path = os.path.join(path, filename)
+        image1 = skimage.io.imread(image_path,plugin='tifffile') / 255
         
-        gt =  cv2.imread(path + "gt/" + filename[:-1],0)
+        gt_filename = os.path.splitext(filename)[0]
+        gt_path = os.path.join(path, "gt", gt_filename + ".tif")
+        gt = cv.imread(gt_path, cv2.IMREAD_GRAYSCALE)
+        if gt is None:
+            raise Exception(f"Ground truth file not found: {gt_path}")
+
         gt[gt>0] = 1
         
-        height = image1.shape[0]
-        width = image1.shape[1]
+        height, width = image1.shape[:2]
          
         stepx = int(width / window) + 1
         stepy = int(height / window) + 1
@@ -45,7 +46,6 @@ def read(path, file_count):
                 coorx = i * window
                 coory = j * window
                 
-                
                 if coorx + window > width:
                     coorx = width - window 
                 if coory + window > height:
@@ -55,28 +55,17 @@ def read(path, file_count):
                 image_patch = image1[coory:coory+window,coorx:coorx+window]
                 image_label = gt[coory:coory+window,coorx:coorx+window]
         
-    #            cv2.imshow("patch", image_patch)
-    #            cv2.imshow("patch GT", image_label)
-                # print("index: ", index)
-    #            cv2.waitKey(0)
                 Ytrain[index,:,:] = image_label.copy()
                 Xtrain[index,:,:,:] = image_patch.copy()
              
                 index +=1
-        
     
-        
-    Xtrain =Xtrain.astype(np.float32) 
-    # Ytrain =Ytrain.astype(np.uint8) 
-    Ytrain =Ytrain.astype(np.float32) 
-    
-    if band_first:
-        x_train = Xtrain.reshape((len(Xtrain), 3, window, window))
-        y_train = Ytrain.reshape((len(Ytrain), 1, window, window))
-    else:
-        x_train = Xtrain.reshape((len(Xtrain), window, window, 3))
-        y_train = Ytrain.reshape((len(Ytrain), 1, window, window))
-        
+    y_train = Ytrain.reshape((len(Ytrain), window, window, 1))    
+    x_train = Xtrain
+            
+    print(f"Loaded {len(x_train)} patches")
+    print(f"Image patch shape: {x_train[0].shape}, Mask patch shape: {y_train[0].shape}")
+
     return x_train, y_train
 
 
